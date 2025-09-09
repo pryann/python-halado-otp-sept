@@ -46,36 +46,39 @@ products = [
 def product_validator(fn):
     def wrapper(products, *args, **kwargs):
         valid_products = []
-        for p in products:
+        for product in products:
             errors = []
 
             required_keys = ["id", "name", "price", "count"]
             for key in required_keys:
-                if key not in p:
-                    errors.append(f"Missing key: {key}")
+                if key not in product:
+                    errors.append(f"Missing key: '{key}'")
 
-            if "id" in p:
-                if not isinstance(p["id"], int) or p["id"] <= 0:
+            if "id" in product:
+                if not isinstance(product["id"], int) or product["id"] <= 0:
                     errors.append("'id' must be a positive integer")
 
-            if "price" in p:
-                if not isinstance(p["price"], (int, float)) or p["price"] <= 0:
+            if "price" in product:
+                if (
+                    not isinstance(product["price"], (int, float))
+                    or product["price"] <= 0
+                ):
                     errors.append("'price' must be a positive number")
 
-            if "count" in p:
-                if not isinstance(p["count"], int) or p["count"] < 0:
+            if "count" in product:
+                if not isinstance(product["count"], int) or product["count"] < 0:
                     errors.append("'count' must be a non-negative integer")
 
-            if "name" in p:
-                if not isinstance(p["name"], str) or not p["name"].strip():
+            if "name" in product:
+                if not isinstance(product["name"], str) or not product["name"].strip():
                     errors.append("'name' must be a non-empty string")
 
             if errors:
                 print(
-                    f"Error with product 'id' {p.get('id', '?')}: {', '.join(errors)}"
+                    f"Error with product 'id' {product.get('id', '?')}: {' | '.join(errors)}"
                 )
             else:
-                valid_products.append(p)
+                valid_products.append(product)
 
         return fn(valid_products, *args, **kwargs)
 
